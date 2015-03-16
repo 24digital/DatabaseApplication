@@ -28,9 +28,12 @@ public class MainActivity extends ActionBarActivity {
         if(listView == null)
         {
             listView = (ListView)findViewById(R.id.listView);
-            adapter = new ArrayAdapter<String>(this, R.layout.activity_main);
-            listView.setAdapter(adapter);
             list = new ArrayList();
+            adapter = new ArrayAdapter<String>(this, R.layout.activity_main, list);
+            listView.setAdapter(adapter);
+
+            contact = new EmergencyContact(this,null,null,1);
+            contact.insertContact("marion","Morris","84398978544",null);
         }
 
 
