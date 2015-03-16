@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
             adapter = new ArrayAdapter<String>(this, R.layout.activity_main, list);
             listView.setAdapter(adapter);
 
-            contact = new EmergencyContact(this,null,null,1);
+            contact = new EmergencyContact(this);
             contact.insertContact("marion","Morris","84398978544",null);
         }
 
