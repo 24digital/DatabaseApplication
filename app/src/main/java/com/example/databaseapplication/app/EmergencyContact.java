@@ -16,11 +16,13 @@ public class EmergencyContact extends SQLiteOpenHelper {
     private DataSource dataSource;
     private final static String DATABASE_NAME= "Contacts";
     private final static String[] columns={"_id","name", "number"};
+    private final static int DATABASE_VERSION=1;
     private ArrayList<ContentValues> list = new ArrayList();
-    public EmergencyContact(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
 
+public EmergencyContact (Context context)
+{
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
+}
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE EMERGENCY_CONTACTS(_id INTEGER PRIMARY KEY ");
