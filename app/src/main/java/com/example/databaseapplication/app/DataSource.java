@@ -46,15 +46,7 @@ public void setDB(SQLiteDatabase database)
     public ArrayList getAllContacts(String[] columns, String databaseTable)
     {
         ArrayList contactList = new ArrayList();
-        Cursor cursor = database.query(databaseTable, columns,null,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast())
-        {
-            contactList.add(cursor.getInt(0));
-            cursor.moveToNext();
 
-        }
-        cursor.close();
         return contactList;
     }
 }

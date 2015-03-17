@@ -33,9 +33,9 @@ public class MainActivity extends ActionBarActivity {
             listView.setAdapter(adapter);
 
             contact = new EmergencyContact(this);
-            contact.insertContact("marion","Morris","84398978544",null);
-        }
+      //  list =    contact.insertContact("marion","Morris","84398978544",null);
 
+        }
 
 
 
