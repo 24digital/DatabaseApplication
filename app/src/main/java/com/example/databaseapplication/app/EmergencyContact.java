@@ -5,69 +5,73 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
 
 /**
  * Created by Marion on 03/15/15.
  */
 public class EmergencyContact extends SQLiteOpenHelper {
-    private DataSource dataSource;
-    private final static String DATABASE_NAME= "Contacts";
-    private final static String DATABASE_TABLE="EMERGENCY_CONTACTS";
-    private final static String[] columns={"_id","name", "number"};
-    private final static int DATABASE_VERSION=1;
-    private ArrayList<ContentValues> list = new ArrayList();
 
-public EmergencyContact (Context context)
-{
-    super(context, DATABASE_NAME, null, DATABASE_VERSION);
-}
+    private final static String DATABASE_NAME = "Contacts";
+
+    private final static int DATABASE_VERSION = 1;
+
+    private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + EmergencyContract.EmergencyEntry.Table_Name + " (" +
+            EmergencyContract.EmergencyEntry.Column_ID + " INTEGER PRIMARY KEY," + EmergencyContract.EmergencyEntry.NAME
+            + " TEXT NOT NULL,"
+            + EmergencyContract.EmergencyEntry.phone + " INTEGER NOT NULL )";
+
+    private static final String DELETE_ENTRIES = "DROP TABLE  IF EXISTS " + EmergencyContract.EmergencyEntry.Table_Name;
+
+
+    public EmergencyContact(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE "+DATABASE_TABLE +"(_id INTEGER PRIMARY KEY autoincrement, name text not null, number INTEGER not null)");
-    insertContact(db);
+        db.execSQL(SQL_CREATE_ENTRIES);
+        initialize(db);
+
     }
+
+    private void initialize(SQLiteDatabase db) {
+
+
+        ContentValues values = new ContentValues();
+        values.put(EmergencyContract.EmergencyEntry.NAME, "marion");
+        values.put(EmergencyContract.EmergencyEntry.phone, 854345223);
+
+
+        db.insert(EmergencyContract.EmergencyEntry.Table_Name, null, values);
+
+        values = new ContentValues();
+        values.put(EmergencyContract.EmergencyEntry.NAME, "Mike");
+        values.put(EmergencyContract.EmergencyEntry.phone, 554342223);
+
+        db.insert(EmergencyContract.EmergencyEntry.Table_Name, null, values);
+      
+        Cursor cursor = db.query(EmergencyContract.EmergencyEntry.Table_Name,
+                EmergencyContract.EmergencyEntry.COLUMNS, null, null, null, null, "name");
+    }
+
+
+    public Cursor getContactCursor() {
+        String query = "select * from "
+                + EmergencyContract.EmergencyEntry.Table_Name;
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, null);
+
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public ArrayList insertContact(SQLiteDatabase db)
-    {
-
-        ContentValues values = new ContentValues();
-        values.put("name","Marion");
-        values.put("number","843469878");
-
-        db.insert(DATABASE_TABLE,null,values);
-String query = "Select * from"+DATABASE_TABLE;
-        Cursor cursor = db.rawQuery(query,null);
-        cursor.moveToFirst();
-        while(cursor.moveToNext())
-        {
-           int id = cursor.getInt(0);
-    String name = cursor.getString(1);
-            String number = cursor.getString(2);
-
-            String message = "ID:"+id+" Name:"+name+" Number"+number;
-            Toast toast = Toast.makeText(this,message,Toast.LENGTH_LONG);
-            toast.show();
-            cursor.moveToNext();
-        }
 
 
-        cursor.close();
-      list =  dataSource.getAllContacts(columns,this.DATABASE_TABLE);
-
-        return list;
-    }
-
-    public void loadContacts()
-    {
-      List view = dataSource.getAllContacts(columns, DATABASE_TABLE);
-    }
+    /**  public void loadContacts()
+     {
+     List view = dataSource.getAllContacts(columns, DATABASE_TABLE);
+     }
+     */
 }

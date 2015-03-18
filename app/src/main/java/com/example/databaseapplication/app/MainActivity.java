@@ -1,45 +1,65 @@
 package com.example.databaseapplication.app;
 
+import android.annotation.TargetApi;
+import android.app.ListActivity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.*;
+import android.support.v4.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
-//List view to hold entities
-    private ListView listView;
-    private ListAdapter adapter;
-    private ArrayList list;
+public class MainActivity extends ListActivity {
+    //List view to hold entities
+    private static final String[] COLUMNS =
+            {"_id", "name", "phone_num" };
+    private static final int[] VIEWS =
+            { R.id.name, R.id.phone};
+
+   private ListView listView;
     private EmergencyContact contact;
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       listView = getListView();
 
-        if(listView == null)
+      contact = new EmergencyContact(this);
+
+
+        try
         {
-            listView = (ListView)findViewById(R.id.listView);
-            list = new ArrayList();
-            adapter = new ArrayAdapter<String>(this, R.layout.activity_main, list);
-            listView.setAdapter(adapter);
-
-            contact = new EmergencyContact(this);
-      //  list =    contact.insertContact("marion","Morris","84398978544",null);
-
+            Cursor cursor = contact.getContactCursor();
+            SimpleCursorAdapter adapter =
+                    new SimpleCursorAdapter(this,
+                            R.layout.emergency_contact, cursor,
+                            COLUMNS, VIEWS, 0);
+            setListAdapter(adapter);
         }
+        catch (Exception ex)
+        { ex.printStackTrace();}
+    }
 
 
 
-}
+        //   SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,R.id.list_item,cursor,COLUMNS,VIEWS ,0);
+       // setListAdapter(cursorAdapter);
+
+
+
+
+
+
 
 
     @Override
@@ -69,4 +89,6 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
