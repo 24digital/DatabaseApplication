@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,14 +42,14 @@ public class MyDAO {
                 allColumns, EmergencyContactHelper.Column_ID + " =" + insertID, null,
                 null,null,null);
         cursor.close();
-        Contact contact = cursoToContact(cursor);
+        Contact contact = cursorToContacts(cursor);
         return contact;
     }
 
-    private Contact cursoToContact(Cursor cursor) {
+    private Contact cursorToContacts(Cursor cursor) {
         Contact contact = new Contact();
-        contact.setName(cursor.getString(0));
-        contact.setNumber(cursor.getLong(1));
+        contact.setName(cursor.getString(1));
+        contact.setNumber(cursor.getLong(2));
         return contact;
     }
 
@@ -65,13 +63,20 @@ public class MyDAO {
 
         while(!cursor.isAfterLast())
         {
-            Contact contact = cursoToContact(cursor);
-            contact.setName(cursor.getString(0));
-            contact.setNumber(cursor.getLong(1));
+            Contact contact = cursorToContacts(cursor);
+            contact.setName(cursor.getString(1));
+            contact.setNumber(cursor.getLong(2));
             contacts.add(contact);
             cursor.moveToNext();
         }
         cursor.close();
         return contacts;
+    }
+
+    public void deleteComment(Contact contact) {
+        long id = contact.getId();
+        System.out.println("Comment deleted with id: " + id);
+        database.delete(EmergencyContactHelper.Table_Name, EmergencyContactHelper.Column_ID
+                + " = " + id, null);
     }
 }

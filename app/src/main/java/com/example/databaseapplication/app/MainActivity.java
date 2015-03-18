@@ -3,17 +3,25 @@ package com.example.databaseapplication.app;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Comment;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
+import java.util.TooManyListenersException;
 
 public class MainActivity extends ListActivity
 
 {
+    private ListView view;
     private MyDAO dao;
 
     @Override
@@ -26,31 +34,41 @@ public class MainActivity extends ListActivity
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         List<Contact> values = dao.getAllContacts();
 
         ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
-    }
 
+    }
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id)
+    {
+     Contact contact = (Contact)   l.getSelectedItem();
+
+
+        Toast toast= Toast.makeText(this,contact.toString(),Toast.LENGTH_LONG);
+        toast.show();
+    }
     public void onClick(View view) {
         @SuppressWarnings("unchecked")
         ArrayAdapter<Contact> adapter = (ArrayAdapter<Contact>) getListAdapter();
         Contact contact = null;
         switch (view.getId()) {
+
+
             case R.id.add:
-                String[] co = new String[] { "Marion", "84891" };
+
 
                 // save the new comment to the database
-               contact  = dao.createContact(co[0],Integer.parseInt(co[1]));
+               contact  = dao.createContact("Marion",131412);
                 adapter.add(contact);
                 break;
             case R.id.delete:
                 if (getListAdapter().getCount() > 0) {
                    contact = (Contact) getListAdapter().getItem(0);
-                  //  dao.deleteComment(comment);
-                  //  adapter.remove(comment);
+                   dao.deleteComment(contact);
+                   adapter.remove(contact);
                 }
                 break;
         }

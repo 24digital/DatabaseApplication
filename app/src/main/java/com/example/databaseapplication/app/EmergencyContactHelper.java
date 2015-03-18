@@ -27,7 +27,7 @@ public class EmergencyContactHelper extends SQLiteOpenHelper {
 
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + Table_Name + " (" +
-            Column_ID + " INTEGER PRIMARY KEY," + NAME
+            Column_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + NAME
             + " TEXT NOT NULL,"
             + phone+ " INTEGER NOT NULL )";
 
@@ -45,7 +45,10 @@ public class EmergencyContactHelper extends SQLiteOpenHelper {
 
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
 
 
     public Cursor getContactCursor() {
@@ -56,15 +59,6 @@ public class EmergencyContactHelper extends SQLiteOpenHelper {
 
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
 
 
-    /**  public void loadContacts()
-     {
-     List view = dataSource.getAllContacts(columns, DATABASE_TABLE);
-     }
-     */
 }
