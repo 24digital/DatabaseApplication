@@ -28,6 +28,7 @@ public class MainActivity extends ListActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        view = getListView();
         dao = new MyDAO(this);
         try {
             dao.open();
@@ -39,17 +40,23 @@ public class MainActivity extends ListActivity
         ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ViewGroup vg = (ViewGroup) view;
+                TextView nameView = (TextView) vg.getChildAt(0);
+                String name = nameView.getText().toString();
+                LinearLayout linearLayout = (LinearLayout) vg.getChildAt(1);
+                TextView phoneView = (TextView) linearLayout.getChildAt(0);
+                String phoneNum = phoneView.getText().toString();
 
+                Toast toast = Toast.makeText(MainActivity.this,phoneNum,Toast.LENGTH_LONG);
+                toast.show();
+
+            }
+        });
     }
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
-     Contact contact = (Contact)   l.getSelectedItem();
 
-
-        Toast toast= Toast.makeText(this,contact.toString(),Toast.LENGTH_LONG);
-        toast.show();
-    }
     public void onClick(View view) {
         @SuppressWarnings("unchecked")
         ArrayAdapter<Contact> adapter = (ArrayAdapter<Contact>) getListAdapter();
