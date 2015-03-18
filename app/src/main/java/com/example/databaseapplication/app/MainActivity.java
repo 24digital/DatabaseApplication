@@ -1,94 +1,75 @@
 package com.example.databaseapplication.app;
 
-import android.annotation.TargetApi;
 import android.app.ListActivity;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
+import org.w3c.dom.Comment;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Random;
 
-public class MainActivity extends ListActivity {
-    //List view to hold entities
-    private static final String[] COLUMNS =
-            {"_id", "name", "phone_num" };
-    private static final int[] VIEWS =
-            { R.id.name, R.id.phone};
+public class MainActivity extends ListActivity
 
-   private ListView listView;
-    private EmergencyContact contact;
+{
+    private MyDAO dao;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       listView = getListView();
-
-      contact = new EmergencyContact(this);
-
-
-        try
-        {
-            Cursor cursor = contact.getContactCursor();
-            SimpleCursorAdapter adapter =
-                    new SimpleCursorAdapter(this,
-                            R.layout.emergency_contact, cursor,
-                            COLUMNS, VIEWS, 0);
-            setListAdapter(adapter);
-        }
-        catch (Exception ex)
-        { ex.printStackTrace();}
-    }
-
-
-
-        //   SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,R.id.list_item,cursor,COLUMNS,VIEWS ,0);
-       // setListAdapter(cursorAdapter);
-
-
-
-
-
-
-
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    listView = (ListView)    savedInstanceState.get("list");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        dao = new MyDAO(this);
+        try {
+            dao.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
+        List<Contact> values = dao.getAllContacts();
+
+        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
+                android.R.layout.simple_list_item_1, values);
+        setListAdapter(adapter);
     }
 
+    public void onClick(View view) {
+        @SuppressWarnings("unchecked")
+        ArrayAdapter<Contact> adapter = (ArrayAdapter<Contact>) getListAdapter();
+        Contact contact = null;
+        switch (view.getId()) {
+            case R.id.add:
+                String[] co = new String[] { "Marion", "84891" };
 
+                // save the new comment to the database
+               contact  = dao.createContact(co[0],Integer.parseInt(co[1]));
+                adapter.add(contact);
+                break;
+            case R.id.delete:
+                if (getListAdapter().getCount() > 0) {
+                   contact = (Contact) getListAdapter().getItem(0);
+                  //  dao.deleteComment(comment);
+                  //  adapter.remove(comment);
+                }
+                break;
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            dao.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+      dao.close();
+        super.onPause();
+    }
 }
