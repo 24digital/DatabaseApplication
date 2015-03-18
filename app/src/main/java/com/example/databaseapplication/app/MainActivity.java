@@ -29,32 +29,51 @@ public class MainActivity extends ListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         view = getListView();
-        dao = new MyDAO(this);
-        try {
-            dao.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        List<Contact> values = dao.getAllContacts();
 
-        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
-        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+
+        view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long id)
+            {
                 ViewGroup vg = (ViewGroup) view;
                 TextView nameView = (TextView) vg.getChildAt(0);
                 String name = nameView.getText().toString();
                 LinearLayout linearLayout = (LinearLayout) vg.getChildAt(1);
                 TextView phoneView = (TextView) linearLayout.getChildAt(0);
                 String phoneNum = phoneView.getText().toString();
+                TextView phoneTypeView = (TextView) linearLayout.getChildAt(1);
+                String phoneType = phoneTypeView.getText().toString();
 
-                Toast toast = Toast.makeText(MainActivity.this,phoneNum,Toast.LENGTH_LONG);
+                String message
+                        = "position = "  + position + ",\n"
+                        + "id = "        +  id      + ",\n"
+                        + "name = "      + name     + ",\n"
+                        + "phoneNum = "  + phoneNum + ",\n"
+                        + "phoneType = " + phoneType;
+                Toast toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
                 toast.show();
 
+                return true;
             }
         });
+
+        dao = new MyDAO(this);
+        try {
+            dao.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        List<Contact> values = dao.getAllContacts();
+
+        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
+                android.R.layout.simple_list_item_1, values);
+        setListAdapter(adapter);
+
     }
 
     public void onClick(View view) {

@@ -20,7 +20,7 @@ public class EmergencyContactHelper extends SQLiteOpenHelper {
             = "com.example.databaseapplication.app";
     public final static String DATABASE_NAME = "Contacts";
 
-    public final static int DATABASE_VERSION = 1;
+    public final static int DATABASE_VERSION = 2;
 
     public static final String COMPLETE_URI="content://"+AUTHORITY+"/"+Table_Name;
     public static final Uri CONTENT_URI = Uri.parse(COMPLETE_URI);

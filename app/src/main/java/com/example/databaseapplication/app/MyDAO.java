@@ -37,21 +37,18 @@ public class MyDAO {
         values.put(EmergencyContactHelper.phone,number);
 
         long insertID = database.insert(EmergencyContactHelper.Table_Name, null, values);
-        
+
         Cursor cursor = database.query(EmergencyContactHelper.Table_Name,
                 allColumns, EmergencyContactHelper.Column_ID + " =" + insertID, null,
                 null,null,null);
-        cursor.close();
-        Contact contact = cursorToContacts(cursor);
-        return contact;
-    }
 
-    private Contact cursorToContacts(Cursor cursor) {
         Contact contact = new Contact();
         contact.setName(cursor.getString(1));
         contact.setNumber(cursor.getLong(2));
         return contact;
     }
+
+
 
     public List<Contact> getAllContacts()
     {
@@ -63,7 +60,9 @@ public class MyDAO {
 
         while(!cursor.isAfterLast())
         {
-            Contact contact = cursorToContacts(cursor);
+            Contact contact = new Contact();
+                    contact.setName(cursor.getString(1));
+            contact.setNumber(cursor.getLong(2));
             contact.setName(cursor.getString(1));
             contact.setNumber(cursor.getLong(2));
             contacts.add(contact);
