@@ -61,6 +61,7 @@ public class MainActivity extends ListActivity
         });
 
         dao = new MyDAO(this);
+        dao.createContact("John", 84135);
         try {
             dao.open();
         } catch (SQLException e) {
@@ -83,13 +84,7 @@ public class MainActivity extends ListActivity
         switch (view.getId()) {
 
 
-            case R.id.add:
 
-
-                // save the new comment to the database
-               contact  = dao.createContact("Marion",131412);
-                adapter.add(contact);
-                break;
             case R.id.delete:
                 if (getListAdapter().getCount() > 0) {
                    contact = (Contact) getListAdapter().getItem(0);
