@@ -49,7 +49,7 @@ public class EmergencyContact extends SQLiteOpenHelper {
         values.put(EmergencyContract.EmergencyEntry.phone, 554342223);
 
         db.insert(EmergencyContract.EmergencyEntry.Table_Name, null, values);
-      
+
         Cursor cursor = db.query(EmergencyContract.EmergencyEntry.Table_Name,
                 EmergencyContract.EmergencyEntry.COLUMNS, null, null, null, null, "name");
     }
