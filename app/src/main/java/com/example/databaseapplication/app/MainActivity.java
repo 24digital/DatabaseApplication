@@ -1,6 +1,10 @@
 package com.example.databaseapplication.app;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,27 +37,12 @@ public class MainActivity extends ListActivity
 
 
 
-        view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                           int position, long id)
-            {
-                ViewGroup vg = (ViewGroup) view;
-                TextView nameView = (TextView) vg.getChildAt(0);
-                String name = nameView.getText().toString();
-                LinearLayout linearLayout = (LinearLayout) vg.getChildAt(1);
-                TextView phoneView = (TextView) linearLayout.getChildAt(0);
-                String phoneNum = phoneView.getText().toString();
-                TextView phoneTypeView = (TextView) linearLayout.getChildAt(1);
-                String phoneType = phoneTypeView.getText().toString();
+                                           int position, long id) {
+                TextView vg = (TextView) view;
 
-                String message
-                        = "position = "  + position + ",\n"
-                        + "id = "        +  id      + ",\n"
-                        + "name = "      + name     + ",\n"
-                        + "phoneNum = "  + phoneNum + ",\n"
-                        + "phoneType = " + phoneType;
-                Toast toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(MainActivity.this, vg.getText(), Toast.LENGTH_LONG);
                 toast.show();
 
                 return true;
@@ -99,6 +88,18 @@ public class MainActivity extends ListActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        dao = (MyDAO) state.getSerializable("main");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("main",dao);
+    }
+
+    @Override
     protected void onResume() {
         try {
             dao.open();
@@ -112,5 +113,26 @@ public class MainActivity extends ListActivity
     protected void onPause() {
       dao.close();
         super.onPause();
+    }
+
+    public static class FireMissilesDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.dialog_fire_missiles)
+                    .setPositiveButton(R.string.fire, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Marion on 3/18/2015.
  */
-public class MyDAO {
+public class MyDAO implements Serializable {
     private SQLiteDatabase database;
     private EmergencyContactHelper helper;
     private String[] allColumns= {EmergencyContactHelper.Column_ID, EmergencyContactHelper.NAME, EmergencyContactHelper.phone};

@@ -6,6 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="debug">true</string>
     <string name="hello">Hello</string>
+    <string name="dialog_fire_missiles">Enter Full Name:</string>
+    <string name="fire">Test</string>
+    <string name="cancel">Cancel</string>
 
     <color name="dividerColor">#1100dd</color>
 </resources>
