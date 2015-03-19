@@ -61,12 +61,14 @@ public class MainActivity extends ListActivity
         });
 
         dao = new MyDAO(this);
-        dao.createContact("John", 84135);
         try {
             dao.open();
+            dao.createContact("John", 84135);
+            dao.createContact("Johsn", 84135);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
 
 
         List<Contact> values = dao.getAllContacts();

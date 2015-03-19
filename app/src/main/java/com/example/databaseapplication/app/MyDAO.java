@@ -39,12 +39,12 @@ public class MyDAO {
         long insertID = database.insert(EmergencyContactHelper.Table_Name, null, values);
 
         Cursor cursor = database.query(EmergencyContactHelper.Table_Name,
-                allColumns, EmergencyContactHelper.Column_ID + " =" + insertID, null,
+                allColumns,null, null,
                 null,null,null);
-
+cursor.moveToFirst();
         Contact contact = new Contact();
-        contact.setName(cursor.getString(1));
-        contact.setNumber(cursor.getLong(2));
+ contact.setName(cursor.getString(0));
+        contact.setNumber(cursor.getLong(1));
         return contact;
     }
 
