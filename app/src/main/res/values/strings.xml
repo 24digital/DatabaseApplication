@@ -9,6 +9,8 @@
     <string name="dialog_fire_missiles">Enter Full Name:</string>
     <string name="fire">Test</string>
     <string name="cancel">Cancel</string>
+    <string name="number">phoneNumber</string>
+    <string name="fullName">fullName</string>
 
     <color name="dividerColor">#1100dd</color>
 </resources>
